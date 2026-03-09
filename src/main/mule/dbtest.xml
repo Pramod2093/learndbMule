@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="dbtestFlow" doc:id="7e3bc488-25df-48cc-9543-966420723d2b" >
+		<http:listener doc:name="Listener" doc:id="97571fb3-d638-4e58-b243-a8be87da34a2" config-ref="HTTP_Listener_config" path="/db"/>
+		<db:insert doc:name="Insert" doc:id="cf41b63d-8b21-4738-8fd7-8bbd532c8e80" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO "LEARNMULESOFT"."EMPLOYEEINFORMATION" (EMPNAME, EMPID, EMPADDRESS, EMPSALARY, EMPLOCATION, EMPSTATUS) VALUES (:empname, :empid, :empadd, :empsal, :emplocation, :empstatus)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	empname: payload.empname,
+	empid: payload.empid,
+	empadd: payload.empadd,
+	empsal:payload.empsal,
+	emplocation:payload.emplocation,
+	empstatus:payload.empstatus1
+}]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="Transform Message" doc:id="a426b0ba-09a0-466b-bf62-1d48cc0721a8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="607df80b-8551-4fa1-be3c-66df01d5cfa5" >
+				<logger level="INFO" doc:name="Logger" doc:id="5d30ac02-ddca-4021-89eb-d05b4547dfb6" message="#[payload]" />
+				<logger level="INFO" doc:name="Logger" doc:id="f6680a50-f739-4b9a-91c9-93327c785e3d" message="Dummy" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

@@ -1,0 +1,6 @@
+oracledatabase:
+  host: "localhost"
+  port: "1521"
+  userName: "learnmulesoft"
+  password: "![/rLgRurlEpw=]"
+  serviceName: "XEPDB1"
