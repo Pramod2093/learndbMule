@@ -6,6 +6,7 @@
 	<artifactId>dbtest</artifactId>
 	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
+	
 
 	<name>dbtest</name>
 
